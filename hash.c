@@ -55,3 +55,67 @@ static uint32_t SuperFastHash (const char *data,int len,uint32_t tablesize) {
   return hash % tablesize;
 }
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "queue.h"
+#include "hash.h"
+
+struct hashtable {
+  uint32_t size;
+  queue_t **queues;
+};
+
+hashtable_t *hopen(uint32_t hsize) {
+  hashtable_t *htp;
+
+  if ((htp = malloc(sizeof(hashtable_t))) == NULL)
+    return NULL;
+
+  if ((htp->queues = malloc(hsize * sizeof(queue_t *))) == NULL) {
+    free(htp);
+    return NULL;
+  }
+
+  for (int i = 0; i < hsize; i++)
+    htp->queues[i] = qopen();
+
+  htp->size = hsize;
+  return htp;
+}
+
+void hclose(hashtable_t *htp) {
+  for (int i = 0; i < htp->size; i++)
+    qclose(htp->queues[i]);
+
+  free(htp->queues);
+  free(htp);
+}
+
+int32_t hput(hashtable_t *htp, void *ep, const char *key, int keylen) {
+  int index = SuperFastHash(key, keylen, htp->size);
+  return qput(htp->queues[index], ep);
+}
+
+void happly(hashtable_t *htp, void (*fn)(void *ep)) {
+  for (int i = 0; i < htp->size; i++)
+    qapply(htp->queues[i], fn);
+}
+
+void *hsearch(hashtable_t *htp,
+              bool (*searchfn)(void *elementp, const void *searchkeyp),
+              const char *key, int32_t keylen) {
+  int index = SuperFastHash(key, keylen, htp->size);
+  queue_t *qp = htp->queues[index];
+  return qsearch(qp, searchfn, (void *) key);
+}
+
+void *hremove(hashtable_t *htp,
+              bool (*searchfn)(void *elementp, const void *searchkeyp),
+              const char *key, int32_t keylen) {
+  int index = SuperFastHash(key, keylen, htp->size);
+  queue_t *qp = htp->queues[index];
+  return qremove(qp, searchfn, (void *) key);
+}
+
+
