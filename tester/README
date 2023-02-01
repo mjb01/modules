@@ -1,0 +1,54 @@
+
+Copy your hash.c and queue.c files to this directory.
+
+To build and run the queue test:
+================================
+make clean								-- clean away old files
+make tqueue								-- built the queue tests
+./queue.test.sh 					-- run the queue tests
+
+To build and run the hash test:
+===============================
+make clean								-- clean away old files
+make thash 							  -- make just the hash test
+./hash.test.sh  					-- run the hash tests
+
+To make and run both tests:
+===========================
+make clean								-- clean away old files
+make 											-- make both tests
+make test									-- run all the tests
+
+
+Here is what the final output should look like:
+===============================================
+make test
+./queue.test.sh
+[testing queue module]
+Success  : tqueue 1 -- open a queue then close it
+Success  : tqueue 2 -- get from an empty queue
+Success  : tqueue 3 -- put then get 3 elements
+Success  : tqueue 4 -- put then get 100 elements
+Success  : tqueue 5 -- apply a function to an empty queue
+Success  : tqueue 6 -- apply a function to an nonempty queue
+Success  : tqueue 7 -- search an empty queue
+Success  : tqueue 8 -- remove from an empty queue
+Success  : tqueue 9 -- concat 2 empty queues
+Success  : tqueue 10 -- concat a nonempty to an empty queue
+Success  : tqueue 11 -- concat an empty to a nonempty queue
+Success  : tqueue 12 -- concat a nonempty to a nonempty queue
+Success  : tqueue 13 -- search for the first element in a queue
+Success  : tqueue 14 -- search for the last element in a queue
+Success  : tqueue 15 -- search for an entry in the middle of a queue
+Success  : tqueue 16 -- search for something thats not in the queue
+Success  : tqueue 17 -- remove the first element of a queue
+Success  : tqueue 18 -- remove the last element of a queue
+Success  : tqueue 19 -- remove an element in the middle of a queue
+Success  : tqueue 20 -- remove an element that is not present in a queue
+[done]
+./hash.test.sh
+[testing hash module]
+Success  : thash 10 -- build and use a small hash table
+Success  : thash 100 -- build and use a medium sized hash table
+Success  : thash 1000 -- build and use a large sized hash table
+[done]
